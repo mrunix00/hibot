@@ -16,10 +16,14 @@ int InitConnection(int *fd, char *server, char *port);
 int divideSTR(char *str,int strlen,char **dest);
 int findSTR(char **str,int len,char *target);
 
-int main(){
+int main(int argc, char *argv[]){
 	struct addrinfo hints,*res;
 	int fd,error;
-
+	printf("%s\n",argv[1]);	
+	if(argc != 2){
+		printf("Usage: %s <irc room>\n",argv[0]);
+		return EXIT_FAILURE;
+	}
 	if((error=InitConnection(&fd,NULL,"6667"))>=0)
 		printf("CONNECTED!\n");
 	else{
@@ -27,7 +31,7 @@ int main(){
 		return EXIT_FAILURE;
 	}
 
-	char login[]="NICK hibot0\nUSER hibot0 0 * :realname\n";
+	char login[]="NICK hibot\nUSER hibot 0 * :realname\n";
 	write(fd,login,sizeof(login));
 
 	char c,buff[maxBufferSize][maxWordSize];
@@ -37,15 +41,16 @@ int main(){
 	
 		if(c == '\n'){
 			buff[i][j]='\0';
-//			printf("%s\n",buff[i]);
+			printf("%s\n",buff[i]);
 			
 			char **temp=malloc(maxBufferSize*sizeof(char));
 			for(int l=0;l<maxBufferSize;l++) temp[l]=malloc(maxWordSize*sizeof(char));
 
 			int tmpINT=divideSTR(buff[i],strlen(buff[i]),temp);
 
-			if(findSTR(temp,tmpINT,":Hi") != -1){
-				char hi[]="PRIVMSG #lol :Hello!\n";
+			if((findSTR(temp,tmpINT,":Hi") != -1)){
+				char hi[100];
+				sprintf(hi,"PRIVMSG #%s :Hello!\n",argv[1]);
 				write(fd,hi,sizeof(hi));
 			}
 
@@ -56,9 +61,10 @@ int main(){
 			j=0;
 		}else{
 			
-			if((strcmp(buff[i],":unknown.local 376 hibot0 :End of message of the day.")) == 0){
+			if((strcmp(buff[i],":unknown.local 376 hibot :End of message of the day.")) == 0){
 				printf("LOGGED IN!!\n");
-				char join[]="JOIN #lol\n";
+				char join[100];
+				sprintf(join,"JOIN #%s\n",argv[1]);
 				write(fd,join,sizeof(join));
 			}
 
@@ -87,7 +93,7 @@ int divideSTR(char *str,int strlen ,char **dest){
 	int j=0,k=0;
 
 	for(int i=0; i <= strlen; i++){
-		 if(str[i] == ' '){
+		 if(str[i] == ' ' || str[i] == '\n' || str[i] == '\t' || str[i] == '\0'){
 			dest[j++][k]='\0';
 			k=0;
 		 }else{
@@ -99,7 +105,7 @@ int divideSTR(char *str,int strlen ,char **dest){
 }
 
 int findSTR(char **str,int len,char *target){
-	for(int g=0;g < len;g++){
+	for(int g=0;g <= len;g++){
 		if(strcmp(str[g],target) == 0){
 			return g;
 		}
