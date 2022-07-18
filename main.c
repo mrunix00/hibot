@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
 	
 		if(c == '\n'){
 			buff[i][j]='\0';
-			printf("%s\n",buff[i]);
+//			printf("%s\n",buff[i]);
 			
 			char **temp=malloc(maxBufferSize*sizeof(char));
 			for(int l=0;l<maxBufferSize;l++) temp[l]=malloc(maxWordSize*sizeof(char));
