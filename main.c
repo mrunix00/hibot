@@ -41,14 +41,14 @@ int main(int argc, char *argv[]){
 	
 		if(c == '\n'){
 			buff[i][j]='\0';
-//			printf("%s\n",buff[i]);
+			printf("%s\n",buff[i]);
 			
 			char **temp=malloc(maxBufferSize*sizeof(char));
 			for(int l=0;l<maxBufferSize;l++) temp[l]=malloc(maxWordSize*sizeof(char));
 
 			int tmpINT=divideSTR(buff[i],strlen(buff[i]),temp);
 
-			if((findSTR(temp,tmpINT,":Hi") != -1)){
+			if((findSTR(temp,--tmpINT,":Hi") != -1)){
 				char hi[100];
 				sprintf(hi,"PRIVMSG #%s :Hello!\n",argv[1]);
 				write(fd,hi,sizeof(hi));
@@ -93,19 +93,19 @@ int divideSTR(char *str,int strlen ,char **dest){
 	int j=0,k=0;
 
 	for(int i=0; i <= strlen; i++){
-		 if(str[i] == ' ' || str[i] == '\n' || str[i] == '\t' || str[i] == '\0'){
+		 if(str[i] == ' ' || str[i] == '\n' || str[i] == '\t' || str[i] == '\0' || str[i] == '\r'){
 			dest[j++][k]='\0';
 			k=0;
 		 }else{
 			dest[j][k++]=str[i];
 		 }
 	}
-
+	
 	return j;
 }
 
 int findSTR(char **str,int len,char *target){
-	for(int g=0;g <= len;g++){
+	for(int g=0;g < len;g++){
 		if(strcmp(str[g],target) == 0){
 			return g;
 		}
