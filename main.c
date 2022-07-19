@@ -19,7 +19,6 @@ int findSTR(char **str,int len,char *target);
 int main(int argc, char *argv[]){
 	struct addrinfo hints,*res;
 	int fd,error;
-	printf("%s\n",argv[1]);	
 	if(argc != 2){
 		printf("Usage: %s <irc room>\n",argv[0]);
 		return EXIT_FAILURE;
@@ -41,7 +40,7 @@ int main(int argc, char *argv[]){
 	
 		if(c == '\n'){
 			buff[i][j]='\0';
-			printf("%s\n",buff[i]);
+//			printf("%s\n",buff[i]);
 			
 			char **temp=malloc(maxBufferSize*sizeof(char));
 			for(int l=0;l<maxBufferSize;l++) temp[l]=malloc(maxWordSize*sizeof(char));
