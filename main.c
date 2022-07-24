@@ -64,7 +64,7 @@ int InitConnection(int *fd,char *ip, char *port){
 	hints.ai_socktype=SOCK_STREAM;
 	hints.ai_flags=AI_PASSIVE;
 
-	getaddrinfo(NULL,"6667",&hints,&res);
+	getaddrinfo(ip,"6667",&hints,&res);
 	*fd = socket(res->ai_family,res->ai_socktype,res->ai_protocol);
 	err=connect(*fd,res->ai_addr,res->ai_addrlen);
 
